@@ -3,14 +3,48 @@
 namespace Modules\Product\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ProductDatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // $this->call([]);
+        // Busca todos os suppliers ordenados
+        $suppliers = DB::table('suppliers')->orderBy('id')->get();
+
+        // Remove o primeiro fornecedor (fica sem produtos)
+        $suppliers = $suppliers->slice(1);
+
+        foreach ($suppliers as $supplier) {
+            // Cada fornecedor terá entre 3 e 5 produtos
+            $productsCount = rand(3, 5);
+
+            for ($i = 1; $i <= $productsCount; $i++) {
+                DB::table('products')->insert([
+                    'supplier_id' => $supplier->id,
+                    'reference'   => 'REF-' . $supplier->id . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                    'name'        => 'Produto ' . $i . ' do ' . $supplier->name,
+                    'color'       => $this->randomColor(),
+                    'price'       => rand(1000, 15000) / 100, // R$ 10,00 até R$ 150,00
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
+                ]);
+            }
+        }
+    }
+
+    private function randomColor(): string
+    {
+        $colors = [
+            'Preto',
+            'Branco',
+            'Vermelho',
+            'Azul',
+            'Verde',
+            'Amarelo',
+            'Cinza',
+        ];
+
+        return $colors[array_rand($colors)];
     }
 }

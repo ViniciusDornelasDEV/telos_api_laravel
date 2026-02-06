@@ -9,10 +9,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            \Modules\Suppliers\Database\Seeders\SuppliersDatabaseSeeder::class,
-            // futuros:
-            // \Modules\User\Database\Seeders\UsersDatabaseSeeder::class,
-            // \Modules\Product\Database\Seeders\ProductsDatabaseSeeder::class,
+            \Modules\Suppliers\database\seeders\SuppliersDatabaseSeeder::class,
+            \Modules\Product\database\seeders\ProductDatabaseSeeder::class,
+            \Modules\User\database\seeders\UserDatabaseSeeder::class,
+            \Modules\User\database\seeders\SupplierUserDatabaseSeeder::class,
+            \Modules\Order\database\seeders\OrderDatabaseSeeder::class,
         ]);
     }
 }
