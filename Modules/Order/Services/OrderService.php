@@ -65,9 +65,20 @@ class OrderService
             $normalizedProducts = $this->normalizeProducts(
                 $payload['products']
             );
+            if (isset($payload['status'])) {
+                if (! in_array($payload['status'], ['Pendente', 'Concluído', 'Cancelado'])) {
+                    throw ValidationException::withMessages([
+                        'status' => [
+                            'Status inválido.'
+                        ]
+                    ]);
+                }
+            }
+
             $order->update([
                 'date'        => $payload['date'],
                 'observation' => $payload['observation'] ?? null,
+                'status'      => $payload['status'] ?? $order->status
             ]);
 
             $order->items()->delete();

@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Order\Services\OrderService;
 use Modules\Order\Http\Resources\OrderResource;
 use Modules\Order\Models\Order;
+use Modules\Order\Jobs\SendDailyOrderReportJob;
 
 class OrderController extends Controller
 {
@@ -15,9 +16,6 @@ class OrderController extends Controller
         protected OrderService $service
     ) {}
 
-    /**
-     * Listagem
-     */
     public function index(): JsonResponse
     {
         $orders = Order::with('items')
@@ -29,9 +27,6 @@ class OrderController extends Controller
         );
     }
 
-    /**
-     * Criação
-     */
     public function store(Request $request): JsonResponse
     {
         $request->validate([
@@ -63,6 +58,7 @@ class OrderController extends Controller
             'products.*.id'        => ['required', 'exists:products,id'],
             'products.*.unitPrice' => ['required', 'numeric'],
             'products.*.quantity'  => ['required', 'integer'],
+            'status'               => ['nullable', 'in:Pendente,Concluído,Cancelado'],
             'observation'          => ['nullable', 'string'],
         ]);
 
@@ -76,4 +72,16 @@ class OrderController extends Controller
             new OrderResource($order)
         );
     }
+
+    public function sendDailyReport(): \Illuminate\Http\JsonResponse
+    {
+        SendDailyOrderReportJob::dispatch(
+            auth()->user()->email
+        );
+
+        return response()->json([
+            'message' => 'Relatório enviado para seu email.'
+        ]);
+    }
+    
 }

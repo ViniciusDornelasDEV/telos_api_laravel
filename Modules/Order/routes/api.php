@@ -8,5 +8,6 @@ Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::post('/', [OrderController::class, 'store']);
         Route::put('{order}', [OrderController::class, 'update']);
+        Route::post('report/daily', [OrderController::class, 'sendDailyReport']);
     });
 });
