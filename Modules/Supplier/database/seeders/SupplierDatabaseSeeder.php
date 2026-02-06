@@ -1,12 +1,15 @@
 <?php
 
-namespace Modules\Suppliers\Database\Seeders;
+namespace Modules\Supplier\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class SuppliersDatabaseSeeder extends Seeder
+class SupplierDatabaseSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         DB::table('suppliers')->insert([

@@ -1,18 +1,18 @@
 <?php
 
-namespace Modules\Suppliers\Http\Controllers;
+namespace Modules\Supplier\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class SuppliersController extends Controller
+class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('suppliers::index');
+        return view('supplier::index');
     }
 
     /**
@@ -20,7 +20,7 @@ class SuppliersController extends Controller
      */
     public function create()
     {
-        return view('suppliers::create');
+        return view('supplier::create');
     }
 
     /**
@@ -33,7 +33,7 @@ class SuppliersController extends Controller
      */
     public function show($id)
     {
-        return view('suppliers::show');
+        return view('supplier::show');
     }
 
     /**
@@ -41,7 +41,7 @@ class SuppliersController extends Controller
      */
     public function edit($id)
     {
-        return view('suppliers::edit');
+        return view('supplier::edit');
     }
 
     /**

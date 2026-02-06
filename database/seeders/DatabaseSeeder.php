@@ -9,7 +9,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            \Modules\Suppliers\database\seeders\SuppliersDatabaseSeeder::class,
+            \Modules\Supplier\database\seeders\SupplierDatabaseSeeder::class,
             \Modules\Product\database\seeders\ProductDatabaseSeeder::class,
             \Modules\User\database\seeders\UserDatabaseSeeder::class,
             \Modules\User\database\seeders\SupplierUserDatabaseSeeder::class,
