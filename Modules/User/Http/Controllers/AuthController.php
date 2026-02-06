@@ -9,9 +9,6 @@ use Modules\User\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * Login e geração do Bearer Token
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -27,7 +24,6 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // opcional: revogar tokens antigos
         $user->tokens()->delete();
 
         $token = $user->createToken('api-token')->plainTextToken;
@@ -44,9 +40,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Logout (revoga o token atual)
-     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

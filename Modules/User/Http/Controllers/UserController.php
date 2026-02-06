@@ -2,55 +2,59 @@
 
 namespace Modules\User\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use Modules\User\Services\UserService;
+use Modules\User\Models\User;
+use Modules\User\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(
+        protected UserService $service
+    ) {}
+
+    public function index(Request $request)
     {
-        return view('user::index');
+        Gate::authorize('index', User::class);
+        $users = $this->service->list();
+
+        return response()->json(
+            UserResource::collection($users)->resolve(),
+            201
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function insert(Request $request)
     {
-        return view('user::create');
+        Gate::authorize('insert', User::class);
+        $data = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6',
+            'status'   => 'required|in:active,inactive',
+            'type'     => 'required|in:admin,seller',
+        ]);
+
+        $user = $this->service->insert($data);
+
+        return response()->json($user, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function update(Request $request, User $user)
     {
-        return view('user::show');
+        Gate::authorize('update', User::class);
+        $data = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6',
+            'status'   => 'required|in:active,inactive',
+            'type'     => 'required|in:admin,seller',
+        ]);
+
+        $updatedUser = $this->service->update($user, $data);
+
+        return response()->json($updatedUser);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('user::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

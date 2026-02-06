@@ -3,8 +3,8 @@
 namespace Modules\Supplier\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\User\Models\User;
 use Modules\Product\Models\Product;
+use Modules\User\Models\User;
 
 class Supplier extends Model
 {
@@ -26,7 +26,7 @@ class Supplier extends Model
         return $this->belongsToMany(
             User::class,
             'supplier_user'
-        );
+        )->withTimestamps();
     }
 
     public function products()

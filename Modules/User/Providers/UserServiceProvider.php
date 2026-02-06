@@ -5,8 +5,10 @@ namespace Modules\User\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
+use Illuminate\Support\Facades\Gate;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Modules\User\Policies\UserPolicy;
 
 class UserServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class UserServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        Gate::policy(User::class, UserPolicy::class);
     }
 
     /**

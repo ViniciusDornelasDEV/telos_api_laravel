@@ -23,8 +23,8 @@ class SupplierController extends Controller
         );
 
         return response()->json(
-            SupplierResource::collection($suppliers)->resolve()
-);
+            SupplierResource::collection($suppliers)->resolve(), 201
+        );
     }
 
     public function insert(Request $request)
@@ -56,7 +56,7 @@ class SupplierController extends Controller
 
         $updatedSupplier = $this->service->update($supplier, $data);
 
-        return response()->json($updatedSupplier);
+        return response()->json($updatedSupplier, 201);
     }
 
 }
