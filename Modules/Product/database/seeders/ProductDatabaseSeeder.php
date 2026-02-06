@@ -9,16 +9,10 @@ class ProductDatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Busca todos os suppliers ordenados
         $suppliers = DB::table('suppliers')->orderBy('id')->get();
-
-        // Remove o primeiro fornecedor (fica sem produtos)
         $suppliers = $suppliers->slice(1);
-
         foreach ($suppliers as $supplier) {
-            // Cada fornecedor terá entre 3 e 5 produtos
             $productsCount = rand(3, 5);
-
             for ($i = 1; $i <= $productsCount; $i++) {
                 DB::table('products')->insert([
                     'supplier_id' => $supplier->id,

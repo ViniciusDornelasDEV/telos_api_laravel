@@ -10,7 +10,6 @@ class OrderDatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Pega sellers (ignora admin)
         $users = DB::table('users')
             ->where('type', 'seller')
             ->orderBy('id')
@@ -20,18 +19,16 @@ class OrderDatabaseSeeder extends Seeder
         $products  = DB::table('products')->orderBy('id')->get();
 
         if ($users->isEmpty() || $suppliers->isEmpty() || $products->isEmpty()) {
-            return; // segurança
+            return;
         }
 
         $statuses = ['Pendente', 'Concluído', 'Cancelado'];
 
         for ($i = 1; $i <= 5; $i++) {
 
-            // escolhe supplier e seller aleatórios
             $supplier = $suppliers->random();
             $user     = $users->random();
 
-            // cria o pedido
             $orderId = DB::table('orders')->insertGetId([
                 'supplier_id' => $supplier->id,
                 'user_id'     => $user->id,
@@ -42,16 +39,14 @@ class OrderDatabaseSeeder extends Seeder
                 'updated_at'  => now(),
             ]);
 
-            // produtos do fornecedor
             $supplierProducts = $products
                 ->where('supplier_id', $supplier->id)
                 ->values();
 
             if ($supplierProducts->isEmpty()) {
-                continue; // fornecedor sem produtos
+                continue;
             }
 
-            // de 1 a 3 produtos por pedido
             $items = $supplierProducts->random(
                 min(rand(3, 6), $supplierProducts->count())
             );

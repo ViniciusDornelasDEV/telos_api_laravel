@@ -2,55 +2,78 @@
 
 namespace Modules\Order\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Modules\Order\Services\OrderService;
+use Modules\Order\Http\Resources\OrderResource;
+use Modules\Order\Models\Order;
 
 class OrderController extends Controller
 {
+    public function __construct(
+        protected OrderService $service
+    ) {}
+
     /**
-     * Display a listing of the resource.
+     * Listagem
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return view('order::index');
+        $orders = Order::with('items')
+            ->orderByDesc('date')
+            ->get();
+
+        return response()->json(
+            OrderResource::collection($orders)
+        );
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Criação
      */
-    public function create()
+    public function store(Request $request): JsonResponse
     {
-        return view('order::create');
+        $request->validate([
+            'date'                 => ['required', 'date'],
+            'supplier.id'          => ['required', 'exists:suppliers,id'],
+            'products'             => ['required', 'array', 'min:1'],
+            'products.*.id'        => ['required', 'exists:products,id'],
+            'products.*.unitPrice' => ['required', 'numeric', 'min:0'],
+            'products.*.quantity'  => ['required', 'integer', 'min:1'],
+            'observation'          => ['nullable', 'string'],
+        ]);
+
+        $order = $this->service->createFromFrontPayload(
+            $request->all(),
+            auth()->user()
+        );
+
+        return response()->json(
+            new OrderResource($order),
+            201
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function update(Request $request, Order $order): JsonResponse
     {
-        return view('order::show');
+        $request->validate([
+            'date'                 => ['required', 'date'],
+            'products'             => ['required', 'array', 'min:1'],
+            'products.*.id'        => ['required', 'exists:products,id'],
+            'products.*.unitPrice' => ['required', 'numeric'],
+            'products.*.quantity'  => ['required', 'integer'],
+            'observation'          => ['nullable', 'string'],
+        ]);
+
+        $order = $this->service->updateFromFrontPayload(
+            $order,
+            $request->all(),
+            auth()->user()
+        );
+
+        return response()->json(
+            new OrderResource($order)
+        );
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('order::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

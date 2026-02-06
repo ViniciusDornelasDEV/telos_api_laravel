@@ -9,23 +9,20 @@ class SupplierUserDatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Busca os vendedores
         $sellers = DB::table('users')
             ->where('type', 'seller')
             ->orderBy('id')
             ->get();
 
         if ($sellers->count() < 2) {
-            return; // segurança
+            return;
         }
 
-        $sellerAll  = $sellers[0]; // terá TODAS as empresas
-        $sellerFive = $sellers[1]; // terá apenas 5
+        $sellerAll  = $sellers[0];
+        $sellerFive = $sellers[1];
 
-        // Busca todos os fornecedores
         $suppliers = DB::table('suppliers')->orderBy('id')->get();
 
-        // 🔹 Vendedor 1 → todas as empresas
         foreach ($suppliers as $supplier) {
             DB::table('supplier_user')->insert([
                 'user_id'     => $sellerAll->id,
@@ -35,7 +32,6 @@ class SupplierUserDatabaseSeeder extends Seeder
             ]);
         }
 
-        // 🔹 Vendedor 2 → apenas 5 empresas
         $suppliers->take(5)->each(function ($supplier) use ($sellerFive) {
             DB::table('supplier_user')->insert([
                 'user_id'     => $sellerFive->id,
