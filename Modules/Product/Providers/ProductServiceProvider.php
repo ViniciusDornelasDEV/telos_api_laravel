@@ -7,6 +7,8 @@ use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Modules\Product\Policies\ProductPolicy;
+use Illuminate\Support\Facades\Gate;
 
 class ProductServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,7 @@ class ProductServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        Gate::policy(Product::class, ProductPolicy::class);
     }
 
     /**
