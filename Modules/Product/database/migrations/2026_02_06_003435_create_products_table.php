@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('color')->nullable();
 
             $table->decimal('price', 10, 2);
-
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
 
             $table->unique(['supplier_id', 'reference']);

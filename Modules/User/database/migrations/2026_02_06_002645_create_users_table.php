@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('password');
 
             $table->enum('status', ['active', 'inactive'])->default('active');
+            
             $table->enum('type', ['seller', 'admin'])->default('seller');
 
             $table->timestamps();

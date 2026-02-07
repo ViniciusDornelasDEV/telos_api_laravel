@@ -14,13 +14,19 @@ class OrderResource extends JsonResource
     {
         return [
             'id'           => $this->id,
+            'supplier'     => $this->supplier
+            ? [
+                'id'   => $this->supplier->id,
+                'name' => $this->supplier->name,
+              ]
+            : null,
             'supplier_id'  => $this->supplier_id,
             'user_id'      => $this->user_id,
             'date'         => $this->date?->format('Y-m-d'),
             'observation'  => $this->observation,
             'status'       => $this->status,
             'is_editable'  => $this->isEditable(),
-            'total'        => number_format($this->total, 2, ',', '.'),
+            'total'        => $this->total, 2,
             'items'        => OrderItemResource::collection(
                                 $this->whenLoaded('items')
                               ),

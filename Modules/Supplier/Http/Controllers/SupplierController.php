@@ -21,6 +21,7 @@ class SupplierController extends Controller
         $suppliers = $this->service->listForUser(
             $request->user()
         );
+        $suppliers->load('users');
 
         return response()->json(
             SupplierResource::collection($suppliers)->resolve(), 201
@@ -39,6 +40,7 @@ class SupplierController extends Controller
         ]);
 
         $supplier = $this->service->insert($data);
+        $supplier->load('users');
 
         return response()->json($supplier, 201);
     }
@@ -52,10 +54,13 @@ class SupplierController extends Controller
             'cep'     => 'required|string|max:9',
             'address' => 'required|string|max:255',
             'status'  => 'required|in:active,inactive',
+            'sellers'   => 'array',
+            'sellers.*' => 'exists:users,id',
         ]);
 
         $updatedSupplier = $this->service->update($supplier, $data);
-
+        $updatedSupplier->load('users');
+        
         return response()->json($updatedSupplier, 201);
     }
 

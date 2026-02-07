@@ -17,6 +17,10 @@ class SupplierResource extends JsonResource
             'cep'     => $this->cep,
             'address' => $this->address,
             'status'  => $this->status == 'active' ? 'Ativo' : 'Inativo',
+            'sellers' => $this->users
+                ->where('type', 'seller')
+                ->pluck('id')
+                ->values(),
         ];
     }
 }

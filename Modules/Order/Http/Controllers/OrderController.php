@@ -18,7 +18,7 @@ class OrderController extends Controller
 
     public function index(): JsonResponse
     {
-        $orders = Order::with('items')
+        $orders = Order::with(['items', 'supplier'])
             ->orderByDesc('date')
             ->get();
 
@@ -36,6 +36,7 @@ class OrderController extends Controller
             'products.*.id'        => ['required', 'exists:products,id'],
             'products.*.unitPrice' => ['required', 'numeric', 'min:0'],
             'products.*.quantity'  => ['required', 'integer', 'min:1'],
+            'status'               => ['nullable', 'in:Pendente,Concluído,Cancelado'],
             'observation'          => ['nullable', 'string'],
         ]);
 

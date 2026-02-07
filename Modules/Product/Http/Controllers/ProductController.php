@@ -35,6 +35,7 @@ class ProductController extends Controller
             'name'        => 'required|string|max:255',
             'color'       => 'nullable|string|max:255',
             'price'       => 'required|numeric|min:0',
+            'status'   => 'required|in:active,inactive',
         ]);
 
 
@@ -52,6 +53,7 @@ class ProductController extends Controller
             'name'        => 'required|string|max:255',
             'color'       => 'nullable|string|max:255',
             'price'       => 'required|numeric|min:0',
+            'status'   => 'required|in:active,inactive',
         ]);
 
         $updatedProduct = $this->service->update($product, $data);
