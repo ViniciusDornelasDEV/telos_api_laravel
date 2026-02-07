@@ -80,7 +80,7 @@ docker compose exec app php artisan migrate
 ```bash
 docker compose exec app php artisan db:seed
 ```
-
+Os usuários para login se encontram na seed: Modules/User/database/seeders/UserDatabaseSeeder.php
 ---
 
 ## 🔐 Autenticação
