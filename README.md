@@ -1,59 +1,192 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📦 Telos API – Backend (Laravel 12)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API REST desenvolvida em **Laravel 12**, utilizando **Docker**, arquitetura **modular** e regras de negócio centralizadas no backend.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Requisitos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Antes de iniciar, certifique-se de ter instalado:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* **Docker**
+* **Docker Compose**
+* **Git**
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🚀 Clonando o projeto
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+```bash
+git clone git@github.com:ViniciusDornelasDEV/telos_api_laravel.git
+cd telos_api_laravel
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ⚙️ Configuração inicial
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1️⃣ Copiar o arquivo de ambiente
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+> O `.env` já vem preparado para o ambiente Docker.
+> Ajustes só são necessários caso mude portas ou serviços.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2️⃣ Subir os containers
 
-## Security Vulnerabilities
+```bash
+docker compose up -d
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Verifique se os containers estão rodando corretamente:
 
-## License
+```bash
+docker compose ps
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 📦 Instalação das dependências
+
+```bash
+docker compose exec app composer install
+```
+
+---
+
+## 🔑 Gerar a chave da aplicação
+
+```bash
+docker compose exec app php artisan key:generate
+```
+
+---
+
+## 🗄️ Banco de dados
+
+### Executar migrations
+
+```bash
+docker compose exec app php artisan migrate
+```
+
+### (Opcional) Popular o banco com dados iniciais
+
+```bash
+docker compose exec app php artisan db:seed
+```
+
+---
+
+## 🔐 Autenticação
+
+A API utiliza **autenticação via Bearer Token**.
+
+## 🧵 Filas e Jobs
+
+O projeto utiliza **Jobs em background** para tarefas assíncronas, como envio de relatórios por email.
+
+### Executar o worker de filas
+
+```bash
+docker compose exec app php artisan queue:work
+```
+
+> ⚠️ Esse comando deve permanecer rodando em um terminal separado.
+
+---
+
+## 📧 Emails (Ambiente de desenvolvimento)
+
+Em ambiente local, os emails **não são enviados para destinatários reais**.
+
+Eles são capturados por um serviço de email local.
+
+### Acessar a interface de emails
+
+Abra no navegador:
+
+```
+http://localhost:8025
+```
+
+Nessa interface é possível visualizar:
+
+* relatórios enviados
+* notificações
+* emails automáticos do sistema
+
+---
+
+## 📊 Relatório diário de pedidos
+
+### Executar manualmente via Artisan
+
+```bash
+docker compose exec app php artisan orders:send-daily-report
+```
+
+### Executar via endpoint autenticado
+
+```
+POST /orders/report/daily
+```
+
+---
+
+## 📮 Coleção Postman
+
+O projeto possui uma **coleção do Postman** com todos os endpoints da API já configurados,
+facilitando testes e exploração dos recursos disponíveis.
+
+https://www.postman.com/viniciusdornelas/telos-api/overview
+
+### Variáveis de ambiente
+
+A coleção utiliza variáveis para facilitar o uso:
+
+* `baseUrl` → URL base da API (ex: `http://localhost:8000`)
+* `token` → Token Bearer obtido após login
+
+O token é atualizado automaticamente ao enviar o request de login.
+
+---
+
+## 🧩 Estrutura do projeto
+
+O projeto utiliza **arquitetura modular**, organizada da seguinte forma:
+
+```
+Modules/
+├── Order
+├── Supplier
+├── Product
+├── User
+```
+
+Cada módulo contém:
+
+* Controllers
+* Models
+* Services
+* Resources
+* Migrations
+* Seeds
+* Jobs (quando aplicável)
+
+---
+
+## 📌 Padrões adotados
+
+* Laravel **12**
+* API REST
+* Resources para padronização de respostas
+* Services para regras de negócio
+* Soft actions (ex: cancelar pedido em vez de excluir)
+* Jobs para processamento assíncrono
+* Cálculos críticos centralizados no backend
