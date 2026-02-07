@@ -18,7 +18,7 @@ class ProductResource extends JsonResource
             'name'        => $this->name,
             'color'       => $this->color,
             'price'       => $this->price,
-            'status' => $this->status === 'active' ? 'Ativo' : 'Inativo',
+            'status' => $this->status,
             'created_at'  => $this->created_at,
             'updated_at'  => $this->updated_at,
         ];

@@ -43,7 +43,7 @@ class ProductImportService
                 $errors++;
             }
         }
-
+        $this->clearSupplierCache($supplierId);
         return [
             'created' => $created,
             'errors'  => $errors,

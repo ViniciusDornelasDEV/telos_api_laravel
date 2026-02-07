@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Modules\Product\Services\ProductService;
 use Modules\Product\Models\Product;
 use Modules\Product\Http\Resources\ProductResource;
+use Modules\Supplier\Models\Supplier;
 
 class ProductController extends Controller
 {
@@ -59,5 +60,15 @@ class ProductController extends Controller
         $updatedProduct = $this->service->update($product, $data);
 
         return response()->json($updatedProduct, 201);
+    }
+
+    public function listBySupplier(Supplier $supplier)
+    {
+        Gate::authorize('getBySupplier', Product::class);
+        $products = $this->service->getBySupplier($supplier->id);
+        return response()->json(
+            ProductResource::collection($products)->resolve(),
+            201
+        );
     }
 }

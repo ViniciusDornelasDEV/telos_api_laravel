@@ -16,7 +16,7 @@ class SupplierResource extends JsonResource
             'cnpj'    => $this->cnpj,
             'cep'     => $this->cep,
             'address' => $this->address,
-            'status'  => $this->status == 'active' ? 'Ativo' : 'Inativo',
+            'status'  => $this->status,
             'sellers' => $this->users
                 ->where('type', 'seller')
                 ->pluck('id')

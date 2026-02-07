@@ -8,11 +8,13 @@ use Modules\Order\Models\Order;
 use Modules\Order\Repositories\OrderRepository;
 use Modules\Product\Models\Product;
 use Modules\User\Models\User;
+use Modules\Product\Services\ProductService;
 
 class OrderService
 {
     public function __construct(
-        protected OrderRepository $repository
+        protected OrderRepository $repository,
+        protected ProductService $productService
     ) {}
 
     public function createFromFrontPayload(array $payload, User $user): Order
@@ -97,18 +99,18 @@ class OrderService
 
     private function validateProductsFromSupplier(array $products, int $supplierId): void
     {
-        $productIds = collect($products)->pluck('id')->toArray();
+        $cachedProducts = $this->productService
+            ->getBySupplier($supplierId)
+            ->keyBy('id');
 
-        $invalid = Product::whereIn('id', $productIds)
-            ->where('supplier_id', '!=', $supplierId)
-            ->exists();
-
-        if ($invalid) {
-            throw ValidationException::withMessages([
-                'products' => [
-                    'Um ou mais produtos não pertencem ao fornecedor selecionado.'
-                ]
-            ]);
+        foreach ($products as $product) {
+            if (! $cachedProducts->has($product['id'])) {
+                throw ValidationException::withMessages([
+                    'products' => [
+                        'Um ou mais produtos não pertencem ao fornecedor selecionado.'
+                    ]
+                ]);
+            }
         }
     }
 

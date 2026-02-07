@@ -11,6 +11,11 @@ class ProductPolicy
     {
         return in_array($user->type, ['admin', 'seller']);
     }
+
+    public function getBySupplier(User $user): bool
+    {
+        return in_array($user->type, ['admin', 'seller']);
+    }
     
     public function insert(User $user): bool
     {
@@ -21,6 +26,5 @@ class ProductPolicy
     public function update(User $user): bool
     {
         return in_array($user->type, ['admin', 'seller']);
-
     }
 }

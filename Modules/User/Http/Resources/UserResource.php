@@ -14,7 +14,7 @@ class UserResource extends JsonResource
             'id'     => $this->id,
             'name'   => $this->name,
             'email'  => $this->email,
-            'status' => $this->status === 'active' ? 'Ativo' : 'Inativo',
+            'status' => $this->status,
             'type'   => $this->type === 'admin' ? 'Administrador' : 'Vendedor',
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
