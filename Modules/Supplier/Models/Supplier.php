@@ -18,9 +18,10 @@ class Supplier extends Model
         'status',
     ];
 
-    /*
-     * Relacionamentos (para depois)
-     */
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
     public function users()
     {
         return $this->belongsToMany(

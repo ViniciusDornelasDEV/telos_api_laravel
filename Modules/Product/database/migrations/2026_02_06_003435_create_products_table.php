@@ -17,9 +17,8 @@ return new class extends Migration {
             $table->string('reference')->nullable();
             $table->string('name');
             $table->string('color')->nullable();
-
             $table->decimal('price', 10, 2);
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->boolean('status')->default(true);
             $table->timestamps();
 
             $table->unique(['supplier_id', 'reference']);

@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('cnpj', 18)->unique();
             $table->string('cep', 9);
             $table->string('address');
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->boolean('status')->default(true);
 
             $table->timestamps();
         });

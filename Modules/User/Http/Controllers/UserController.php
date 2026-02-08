@@ -33,7 +33,7 @@ class UserController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => 'required|string',
-            'status'   => 'required|in:active,inactive',
+            'status'  => 'required|boolean',
             'type'     => 'required|in:admin,seller',
         ]);
 
@@ -49,7 +49,7 @@ class UserController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6',
-            'status'   => 'required|in:active,inactive',
+            'status'  => 'required|boolean',
             'type'     => 'required|in:admin,seller',
         ]);
 

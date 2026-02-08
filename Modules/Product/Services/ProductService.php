@@ -38,7 +38,7 @@ class ProductService
             now()->addMinutes(30),
             function () use ($supplierId) {
                 return Product::where('supplier_id', $supplierId)
-                    ->where('status', 'active')
+                    ->where('status', true)
                     ->get();
             }
         );

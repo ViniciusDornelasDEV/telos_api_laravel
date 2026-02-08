@@ -18,8 +18,10 @@ class SupplierController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('index', Supplier::class);
+        $onlyActive = $request->boolean('active');
         $suppliers = $this->service->listForUser(
-            $request->user()
+            $request->user(),
+            $onlyActive
         );
         $suppliers->load('users');
 
@@ -36,7 +38,7 @@ class SupplierController extends Controller
             'cnpj'    => 'required|string|size:18|unique:suppliers,cnpj',
             'cep'     => 'required|string|max:9',
             'address' => 'required|string|max:255',
-            'status'  => 'required|in:active,inactive',
+            'status'  => 'required|boolean',
         ]);
 
         $supplier = $this->service->insert($data);
@@ -53,7 +55,7 @@ class SupplierController extends Controller
             'cnpj'    => 'required|string|size:18|unique:suppliers,cnpj,' . $supplier->id,
             'cep'     => 'required|string|max:9',
             'address' => 'required|string|max:255',
-            'status'  => 'required|in:active,inactive',
+            'status'  => 'required|boolean',
             'sellers'   => 'array',
             'sellers.*' => 'exists:users,id',
         ]);

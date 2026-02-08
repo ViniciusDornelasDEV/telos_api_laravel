@@ -13,9 +13,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            
+            $table->boolean('status')->default(true);
             $table->enum('type', ['seller', 'admin'])->default('seller');
 
             $table->timestamps();

@@ -24,6 +24,12 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if (! $user->status) {
+            return response()->json([
+                'message' => 'Usuário inativo. Entre em contato com o administrador.'
+            ], 403);
+        }
+
         $user->tokens()->delete();
 
         $token = $user->createToken('api-token')->plainTextToken;

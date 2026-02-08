@@ -19,7 +19,8 @@ class ProductDatabaseSeeder extends Seeder
                     'reference'   => 'REF-' . $supplier->id . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
                     'name'        => 'Produto ' . $i . ' do ' . $supplier->name,
                     'color'       => $this->randomColor(),
-                    'price'       => rand(1000, 15000) / 100, // R$ 10,00 até R$ 150,00
+                    'price'       => rand(1000, 15000) / 100,
+                    'status'      => true,
                     'created_at'  => now(),
                     'updated_at'  => now(),
                 ]);

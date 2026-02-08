@@ -13,13 +13,13 @@ class SupplierService
         protected SupplierRepository $repository
     ) {}
 
-    public function listForUser(User $user)
+    public function listForUser(User $user, bool $onlyActive = false)
     {
         if ($user->type === 'admin') {
-            return $this->repository->all();
+            return $this->repository->all($onlyActive);
         }
 
-        return $this->repository->forUser($user);
+        return $this->repository->forUser($user, $onlyActive);
     }
 
     public function insert(array $data): Supplier

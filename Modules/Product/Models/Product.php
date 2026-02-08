@@ -23,6 +23,7 @@ class Product extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'status' => 'boolean',
     ];
 
     public function supplier()
