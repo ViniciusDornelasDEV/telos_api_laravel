@@ -2,6 +2,7 @@
 
 namespace Modules\Product\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -16,7 +17,6 @@ class ProductImportController extends Controller
             'file'        => ['required', 'file', 'mimes:csv,txt'],
         ]);
 
-        // salva temporariamente
         $path = $request->file('file')->store('imports');
 
         ImportProductsFromCsvJob::dispatch(
@@ -25,7 +25,7 @@ class ProductImportController extends Controller
             auth()->user()
         );
 
-        return response()->json([
+        return ApiResponse::success([
             'message' => 'Arquivo recebido. O processamento será feito em segundo plano.'
         ]);
     }

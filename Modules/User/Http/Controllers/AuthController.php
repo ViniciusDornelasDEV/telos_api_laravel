@@ -2,14 +2,16 @@
 
 namespace Modules\User\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Modules\User\Models\User;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $request->validate([
             'email'    => 'required|email',
@@ -19,14 +21,22 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Credenciais inválidas'
+            return new JsonResponse([
+                'success' => false,
+                'error' => [
+                    'type' => 'authentication_error',
+                    'message' => 'Credenciais inválidas',
+                ],
             ], 401);
         }
 
         if (! $user->status) {
-            return response()->json([
-                'message' => 'Usuário inativo. Entre em contato com o administrador.'
+            return new JsonResponse([
+                'success' => false,
+                'error' => [
+                    'type' => 'authorization_error',
+                    'message' => 'Usuário inativo. Entre em contato com o administrador.',
+                ],
             ], 403);
         }
 
@@ -34,7 +44,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json([
+        return ApiResponse::success([
             'token' => $token,
             'user'  => [
                 'id'     => $user->id,
@@ -46,11 +56,11 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json([
+        return ApiResponse::success([
             'message' => 'Logout realizado com sucesso'
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -23,7 +24,7 @@ class OrderController extends Controller
             ->orderByDesc('date')
             ->get();
 
-        return response()->json(
+        return ApiResponse::success(
             OrderResource::collection($orders)
         );
     }
@@ -46,7 +47,7 @@ class OrderController extends Controller
             auth()->user()
         );
 
-        return response()->json(
+        return ApiResponse::success(
             new OrderResource($order),
             201
         );
@@ -60,7 +61,7 @@ class OrderController extends Controller
             auth()->user()
         );
 
-        return response()->json(
+        return ApiResponse::success(
             new OrderResource($order)
         );
     }
@@ -71,7 +72,7 @@ class OrderController extends Controller
             auth()->user()->email
         );
 
-        return response()->json([
+        return ApiResponse::success([
             'message' => 'Relatório enviado para seu email.'
         ]);
     }

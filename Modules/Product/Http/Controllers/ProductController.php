@@ -2,6 +2,7 @@
 
 namespace Modules\Product\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -23,7 +24,7 @@ class ProductController extends Controller
         Gate::authorize('index', Product::class);
         $products = $this->service->list();
 
-        return response()->json(
+        return ApiResponse::success(
             ProductResource::collection($products)->resolve(),
             201
         );
@@ -33,21 +34,21 @@ class ProductController extends Controller
     {
         $product = $this->service->insert($request->validated());
 
-        return response()->json($product, 201);
+        return ApiResponse::success($product, 201);
     }
 
     public function update(UpdateProductRequest $request, Product $product)
     {
         $updatedProduct = $this->service->update($product, $request->validated());
 
-        return response()->json($updatedProduct, 201);
+        return ApiResponse::success($updatedProduct, 201);
     }
 
     public function listBySupplier(Supplier $supplier)
     {
         Gate::authorize('getBySupplier', Product::class);
         $products = $this->service->getBySupplier($supplier->id);
-        return response()->json(
+        return ApiResponse::success(
             ProductResource::collection($products)->resolve(),
             201
         );

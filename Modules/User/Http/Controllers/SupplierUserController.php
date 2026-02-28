@@ -2,6 +2,7 @@
 
 namespace Modules\User\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Modules\Supplier\Models\Supplier;
 use Modules\User\Models\User;
@@ -13,7 +14,7 @@ class SupplierUserController extends Controller
     public function index(Supplier $supplier): JsonResponse
     {
         Gate::authorize('update', User::class);
-        return response()->json($supplier->users);
+        return ApiResponse::success($supplier->users);
     }
 
     public function attach(Supplier $supplier, User $user): JsonResponse
@@ -21,7 +22,7 @@ class SupplierUserController extends Controller
         Gate::authorize('update', User::class);
         $supplier->users()->syncWithoutDetaching([$user->id]);
 
-        return response()->json([
+        return ApiResponse::success([
             'message' => 'Usuário vinculado ao fornecedor com sucesso'
         ]);
     }
@@ -31,7 +32,7 @@ class SupplierUserController extends Controller
         Gate::authorize('update', User::class);
         $supplier->users()->detach($user->id);
 
-        return response()->json([
+        return ApiResponse::success([
             'message' => 'Usuário desvinculado do fornecedor com sucesso'
         ]);
     }

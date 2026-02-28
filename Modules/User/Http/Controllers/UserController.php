@@ -2,6 +2,7 @@
 
 namespace Modules\User\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -22,7 +23,7 @@ class UserController extends Controller
         Gate::authorize('index', User::class);
         $users = $this->service->list();
 
-        return response()->json(
+        return ApiResponse::success(
             UserResource::collection($users)->resolve(),
             201
         );
@@ -32,13 +33,13 @@ class UserController extends Controller
     {
         $user = $this->service->insert($request->validated());
 
-        return response()->json($user, 201);
+        return ApiResponse::success($user, 201);
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
         $updatedUser = $this->service->update($user, $request->validated());
 
-        return response()->json($updatedUser);
+        return ApiResponse::success($updatedUser);
     }
 }

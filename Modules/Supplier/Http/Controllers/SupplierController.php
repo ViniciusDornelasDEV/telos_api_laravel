@@ -2,6 +2,7 @@
 
 namespace Modules\Supplier\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -27,7 +28,7 @@ class SupplierController extends Controller
         );
         $suppliers->load('users');
 
-        return response()->json(
+        return ApiResponse::success(
             SupplierResource::collection($suppliers)->resolve(), 201
         );
     }
@@ -37,7 +38,7 @@ class SupplierController extends Controller
         $supplier = $this->service->insert($request->validated());
         $supplier->load('users');
 
-        return response()->json($supplier, 201);
+        return ApiResponse::success($supplier, 201);
     }
 
     public function update(UpdateSupplierRequest $request, Supplier $supplier)
@@ -45,7 +46,7 @@ class SupplierController extends Controller
         $updatedSupplier = $this->service->update($supplier, $request->validated());
         $updatedSupplier->load('users');
 
-        return response()->json($updatedSupplier, 201);
+        return ApiResponse::success($updatedSupplier, 201);
     }
 
 }
