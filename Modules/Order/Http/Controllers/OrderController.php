@@ -5,6 +5,7 @@ namespace Modules\Order\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Modules\Order\Http\Requests\UpdateOrderRequest;
 use Modules\Order\Services\OrderService;
 use Modules\Order\Http\Resources\OrderResource;
 use Modules\Order\Models\Order;
@@ -51,21 +52,11 @@ class OrderController extends Controller
         );
     }
 
-    public function update(Request $request, Order $order): JsonResponse
+    public function update(UpdateOrderRequest $request, Order $order): JsonResponse
     {
-        $request->validate([
-            'date'                 => ['required', 'date'],
-            'products'             => ['required', 'array', 'min:1'],
-            'products.*.id'        => ['required', 'exists:products,id'],
-            'products.*.unitPrice' => ['required', 'numeric'],
-            'products.*.quantity'  => ['required', 'integer'],
-            'status'               => ['nullable', 'in:Pendente,Concluído,Cancelado'],
-            'observation'          => ['nullable', 'string'],
-        ]);
-
         $order = $this->service->updateFromFrontPayload(
             $order,
-            $request->all(),
+            $request->validated(),
             auth()->user()
         );
 
@@ -74,7 +65,7 @@ class OrderController extends Controller
         );
     }
 
-    public function sendDailyReport(): \Illuminate\Http\JsonResponse
+    public function sendDailyReport(): JsonResponse
     {
         SendDailyOrderReportJob::dispatch(
             auth()->user()->email

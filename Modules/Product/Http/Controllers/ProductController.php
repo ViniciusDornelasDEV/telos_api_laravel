@@ -5,6 +5,8 @@ namespace Modules\Product\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Modules\Product\Http\Requests\InsertProductRequest;
+use Modules\Product\Http\Requests\UpdateProductRequest;
 use Modules\Product\Services\ProductService;
 use Modules\Product\Models\Product;
 use Modules\Product\Http\Resources\ProductResource;
@@ -27,37 +29,16 @@ class ProductController extends Controller
         );
     }
 
-    public function insert(Request $request)
+    public function insert(InsertProductRequest $request)
     {
-        Gate::authorize('insert', Product::class);
-        $data = $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
-            'reference'   => 'nullable|string|max:255',
-            'name'        => 'required|string|max:255',
-            'color'       => 'nullable|string|max:255',
-            'price'       => 'required|numeric|min:0',
-            'status'  => 'required|boolean',
-        ]);
-
-
-        $product = $this->service->insert($data);
+        $product = $this->service->insert($request->validated());
 
         return response()->json($product, 201);
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        Gate::authorize('update', Product::class);
-        $data = $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
-            'reference'   => 'nullable|string|max:255',
-            'name'        => 'required|string|max:255',
-            'color'       => 'nullable|string|max:255',
-            'price'       => 'required|numeric|min:0',
-            'status'  => 'required|boolean',
-        ]);
-
-        $updatedProduct = $this->service->update($product, $data);
+        $updatedProduct = $this->service->update($product, $request->validated());
 
         return response()->json($updatedProduct, 201);
     }

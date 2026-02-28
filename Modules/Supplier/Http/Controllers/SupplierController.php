@@ -5,6 +5,8 @@ namespace Modules\Supplier\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Gate;
+use Modules\Supplier\Http\Requests\InsertSupplierRequest;
+use Modules\Supplier\Http\Requests\UpdateSupplierRequest;
 use Modules\Supplier\Services\SupplierService;
 use Modules\Supplier\Models\Supplier;
 use Modules\Supplier\Http\Resources\SupplierResource;
@@ -30,39 +32,19 @@ class SupplierController extends Controller
         );
     }
 
-    public function insert(Request $request)
+    public function insert(InsertSupplierRequest $request)
     {
-        Gate::authorize('insert', Supplier::class);
-        $data = $request->validate([
-            'name'    => 'required|string|max:255',
-            'cnpj'    => 'required|string|size:18|unique:suppliers,cnpj',
-            'cep'     => 'required|string|max:9',
-            'address' => 'required|string|max:255',
-            'status'  => 'required|boolean',
-        ]);
-
-        $supplier = $this->service->insert($data);
+        $supplier = $this->service->insert($request->validated());
         $supplier->load('users');
 
         return response()->json($supplier, 201);
     }
 
-    public function update(Request $request, Supplier $supplier)
+    public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
-        Gate::authorize('update', Supplier::class);
-        $data = $request->validate([
-            'name'    => 'required|string|max:255',
-            'cnpj'    => 'required|string|size:18|unique:suppliers,cnpj,' . $supplier->id,
-            'cep'     => 'required|string|max:9',
-            'address' => 'required|string|max:255',
-            'status'  => 'required|boolean',
-            'sellers'   => 'array',
-            'sellers.*' => 'exists:users,id',
-        ]);
-
-        $updatedSupplier = $this->service->update($supplier, $data);
+        $updatedSupplier = $this->service->update($supplier, $request->validated());
         $updatedSupplier->load('users');
-        
+
         return response()->json($updatedSupplier, 201);
     }
 
