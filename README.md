@@ -144,7 +144,7 @@ POST /orders/report/daily
 O projeto possui uma **coleção do Postman** com todos os endpoints da API já configurados,
 facilitando testes e exploração dos recursos disponíveis.
 
-https://www.postman.com/viniciusdornelas/telos-api/overview
+https://www.postman.com/epr000/telos-api/overview
 
 ### Variáveis de ambiente
 
